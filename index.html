@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="https://www.pinclipart.com/picdir/big/555-5555673_music-video-photograph-hashtag-here-with-me-whatsapp.png" />
+    <title>Geolocation Map Application</title>
+  </head>
+ 
+  <style>
+    #getLocationBtn {
+      margin-bottom: 10px;
+    }
+ 
+    #map {
+      height: 500px;
+      width: 100%;
+    }
+  </style>
+  <body>
+    <button id="getLocationBtn">Get Location</button>
+    <button id="removeLocationBtn">Remove Location</button>
+    <div id="map"></div>
+ 
+    <script>
+      const getLocationBtn = document.getElementById("getLocationBtn");
+      const removeLocationBtn = document.getElementById("removeLocationBtn");
+      const mapDiv = document.getElementById("map");
+ 
+      function getLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+          alert("Geolocation is not supported by this browser.");
+        }
+      }
+ 
+      function showPosition(position) {
+        const lat = position.coords.latitude;
+        const long = position.coords.longitude;
+        localStorage.setItem("lat", lat);
+        localStorage.setItem("long", long);
+        displayMap(lat, long);
+      }
+ 
+      function displayMap(lat, long) {
+        const mapUrl = `https://maps.google.com/maps?q=${lat},${long}&z=15&output=embed`;
+        mapDiv.innerHTML = `<iframe width="100%" height="500" frameborder="0" style="border:0" src="${mapUrl}" allowfullscreen></iframe>`;
+      }
+ 
+      function removeLocation() {
+        localStorage.removeItem("lat");
+        localStorage.removeItem("long");
+        mapDiv.innerHTML = "";
+        getLocationBtn.disabled = false;
+      }
+ 
+      function checkLocation() {
+        const lat = localStorage.getItem("lat");
+        const long = localStorage.getItem("long");
+        if (lat && long) {
+          getLocationBtn.disabled = true;
+          displayMap(lat, long);
+        }
+      }
+ 
+      getLocationBtn.addEventListener("click", getLocation);
+      removeLocationBtn.addEventListener("click", removeLocation);
+      checkLocation();
+    </script>
+ 
+  </body>
+</html>
